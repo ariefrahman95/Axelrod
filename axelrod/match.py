@@ -22,7 +22,7 @@ class Match(object):
 
     def __init__(self, players, turns=None, prob_end=None,
                  game=None, deterministic_cache=None,
-                 noise=0, match_attributes=None):
+                 noise=0, noise_bias=False, match_attributes=None):
         """
         Parameters
         ----------
@@ -38,6 +38,9 @@ class Match(object):
             A cache of resulting actions for deterministic matches
         noise : float
             The probability that a player's intended action should be flipped
+        noise_bias : bool
+            If true, players will only allow noise flipping to happen
+            in cooperate choices.
         match_attributes : dict
             Mapping attribute names to values which should be passed to players.
             The default is to use the correct values for turns, game and noise
@@ -52,6 +55,7 @@ class Match(object):
 
         self.result = []
         self.noise = noise
+        self.noise_bias = noise_bias
 
         if game is None:
             self.game = Game()
@@ -134,7 +138,7 @@ class Match(object):
                 p.reset()
                 p.set_match_attributes(**self.match_attributes)
             for _ in range(turns):
-                self.players[0].play(self.players[1], self.noise)
+                self.players[0].play(self.players[1], self.noise, self.noise_bias)
             result = list(
                 zip(self.players[0].history, self.players[1].history))
 

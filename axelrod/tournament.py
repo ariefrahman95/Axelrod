@@ -29,7 +29,7 @@ class Tournament(object):
     def __init__(self, players: List[Player],
                  name: str = 'axelrod', game: Game = None, turns: int = None,
                  prob_end: float = None, repetitions: int = 10,
-                 noise: float = 0, edges: List[Tuple] = None,
+                 noise: float = 0, noise_bias: bool = False, edges: List[Tuple] = None,
                  match_attributes: dict = None) -> None:
         """
         Parameters
@@ -63,6 +63,7 @@ class Tournament(object):
             self.game = game
         self.name = name
         self.noise = noise
+        self.noise_bias = noise_bias
         self.num_interactions = 0
         self.players = players
         self.repetitions = repetitions
@@ -78,6 +79,7 @@ class Tournament(object):
                                               repetitions=self.repetitions,
                                               prob_end=prob_end,
                                               noise=self.noise,
+                                              noise_bias=self.noise_bias,
                                               edges=edges,
                                               match_attributes=match_attributes)
         self._logger = logging.getLogger(__name__)

@@ -209,24 +209,26 @@ class Player(object):
         return name
 
     @staticmethod
-    def _add_noise(noise, s1, s2):
+    def _add_noise(noise, noise_bias, s1, s2):
         r = random.random()
         if r < noise:
-            s1 = s1.flip()
+            if not noise_bias or s1 == C:
+                s1 = s1.flip()
         r = random.random()
         if r < noise:
-            s2 = s2.flip()
+            if not noise_bias or s2 == C:
+                s2 = s2.flip()
         return s1, s2
 
     def strategy(self, opponent):
         """This is a placeholder strategy."""
         raise NotImplementedError()
 
-    def play(self, opponent, noise=0):
+    def play(self, opponent, noise=0, noise_bias=False):
         """This pits two players against each other."""
         s1, s2 = self.strategy(opponent), opponent.strategy(self)
         if noise:
-            s1, s2 = self._add_noise(noise, s1, s2)
+            s1, s2 = self._add_noise(noise, noise_bias, s1, s2)
         update_history(self, s1)
         update_history(opponent, s2)
         update_state_distribution(self, s1, s2)

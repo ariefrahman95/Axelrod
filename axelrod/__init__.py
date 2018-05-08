@@ -14,6 +14,7 @@ from .player import (
 from .mock_player import MockPlayer
 from .match import Match
 from .moran import MoranProcess, ApproximateMoranProcess
+from .case import CaseProcess, ApproximateCaseProcess
 from .strategies import *
 from .deterministic_cache import DeterministicCache
 from .match_generator import *
