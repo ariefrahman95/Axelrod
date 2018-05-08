@@ -182,13 +182,14 @@ class Player(object):
         # the game matrix, the number of rounds or the noise
         pass
 
-    def set_match_attributes(self, length=-1, game=None, noise=0):
+    def set_match_attributes(self, length=-1, game=None, noise=0, noise_bias=False):
         if not game:
             game = DefaultGame
         self.match_attributes = {
             "length": length,
             "game": game,
-            "noise": noise
+            "noise": noise,
+            "noise_bias": noise_bias
         }
         self.receive_match_attributes()
 

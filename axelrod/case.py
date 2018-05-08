@@ -24,16 +24,10 @@ class CaseProcess(object):
                  interaction_graph: Graph = None,
                  reproduction_graph: Graph = None) -> None:
         """
-        An agent based Case process class. In each round, each player plays a
+        An agent-based Case process class. In each round, each player plays a
         Match with each other player. Players are assigned a fitness score by
         their total score from all matches in the round. The best player will
         be cloned n times. The clones replace n players with the lowest fitness.
-
-        If the mutation_rate is 0, the population will eventually fixate on
-        exactly one player type. In this case a StopIteration exception is
-        raised and the play stops. If the mutation_rate is not zero, then the
-        process will iterate indefinitely, so mp.play() will never exit, and
-        you should use the class as an iterator instead.
 
         It is possible to pass interaction graphs and reproduction graphs to the
         Case process. In this case, in each round, each player plays a
@@ -48,6 +42,8 @@ class CaseProcess(object):
         players
         turns:
             The number of turns in each pairwise interaction
+        maximum_round:
+            The maximum number of simulation rounds before terminating the simulation
         noise:
             The background noise, if any. Randomly flips plays with probability
             `noise`.
@@ -59,8 +55,6 @@ class CaseProcess(object):
             The amount of player(s) to replace at the end of each round
         deterministic_cache:
             A optional prebuilt deterministic cache
-        mode:
-            Birth-Death (bd) or Death-Birth (db)
         interaction_graph: Axelrod.graph.Graph
             The graph in which the replicators are arranged
         reproduction_graph: Axelrod.graph.Graph
@@ -120,6 +114,10 @@ class CaseProcess(object):
         ----------
         index:
             List of the index of players to be removed
+
+        Returns
+        ----------
+            Player with lowest score and the lowest score itself
         """
         lowest_scorers = [ idx for idx, score in enumerate(self.current_scores) if score == np.min(self.current_scores) ]
         lowest_scorer = random.choice(lowest_scorers)
@@ -133,6 +131,10 @@ class CaseProcess(object):
         ----------
         index:
             The index of the player to be copied
+        
+        Returns
+        ----------
+            Player with highest score and the highest score itself
         """
         highest_scorers = [ idx for idx, score in enumerate(self.current_scores) if score == np.max(self.current_scores) ]
         highest_scorer = random.choice(highest_scorers)
@@ -163,6 +165,11 @@ class CaseProcess(object):
         - choose the player with the highest score
         - choose n players to be replaced
         - update the population
+
+        The simulation stops when one of the three conditions below happens:
+        - The population is fixated to one type of agent
+        - The population is mutually cooperative (all players always cooperate)
+        - The number of maximum_round is reached
 
         Returns
         -------

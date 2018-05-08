@@ -39,8 +39,7 @@ class Match(object):
         noise : float
             The probability that a player's intended action should be flipped
         noise_bias : bool
-            If true, players will only allow noise flipping to happen
-            in cooperate choices.
+            If true, players will only allow noise flipping from cooperate plays to defects.
         match_attributes : dict
             Mapping attribute names to values which should be passed to players.
             The default is to use the correct values for turns, game and noise
